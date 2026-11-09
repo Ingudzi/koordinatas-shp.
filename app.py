@@ -59,6 +59,9 @@ for ix,f in enumerate(uploads,1):
             data=edited.to_dict('records')
             if len(data)<3: raise ValueError('Nepieciešamas vismaz 3 virsotnes. Papildini tabulu.')
             if any(pd.isna(r['X']) or pd.isna(r['Y']) for r in data):raise ValueError('Tabulā ir tukšas koordinātas')
+            numbers=[int(r['Nr']) for r in data]
+            if numbers != list(range(1,len(data)+1)):
+                raise ValueError('Virsotņu numuriem jābūt secīgiem no 1 bez iztrūkumiem. Pārbaudi OCR un tabulu.')
             poly,wgs,plausible=geometry(data,swap)
             st.metric('Platība',f'{poly.area/10000:.4f} ha')
             st.write(f'**Virsotnes:** {len(data)} | **Koordinātu sistēma:** EPSG:3059')
